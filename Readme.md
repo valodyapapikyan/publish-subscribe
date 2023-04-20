@@ -5,7 +5,7 @@
 # Usage
 
 ```
-import { PublisherSubscriber } from 'publisher_subscriber';
+import{ PubSub } from './PublisherSubscriber';
 
 
 class DataStore<T extends { [k: string]: unknown }> extends PubSub<T> {
