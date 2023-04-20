@@ -1,1 +1,1 @@
-export * from './PublisherSubscriber';
+import { PubSub } from './PublisherSubscriber';
