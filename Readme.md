@@ -8,29 +8,11 @@
 import{ PubSub } from './PublisherSubscriber';
 
 
-class DataStore<T extends { [k: string]: unknown }> extends PubSub<T> {
+class DataStore<T extends { [K: string]: any }> extends PubSub<T> {
   constructor() {
     super();
   }
-
-  //your code
 }
-
-type data1 = {
-  on: boolean;
-  off: boolean;
-};
-
-type data2 = {
-  on: false;
-  off: true;
-};
-type MyEvent = {
-  onStart: data1;
-  onFinish: data2;
-};
-
-const ds = new DataStore<MyEvent>();
 
 const getDebounced = function (cb: (args: any) => any) {
   let timeout: ReturnType<typeof setTimeout>;
@@ -38,22 +20,38 @@ const getDebounced = function (cb: (args: any) => any) {
   return function (args: any) {
     clearTimeout(timeout);
 
-    timeout = setTimeout(() => cb(args), 3000);
+    timeout = setTimeout(() => cb(args), 2000);
   };
 };
 
-const getDebounce = getDebounced((data) => {
+type a = {
+  value: number;
+};
+
+type b = {
+  value: number;
+};
+
+type TEvent = {
+  start: a;
+  stop: b;
+};
+
+const dataStore = new DataStore<TEvent>();
+
+const delayed = getDebounced((data)=> console.log(data));
+
+
+const unsubscribeStart = dataStore.subscribe('start', (data) => delayed(data));
+
+const unsubscribeStop =  dataStore.subscribe('stop', (data) => {
   console.log(data);
 });
 
-// delayed
-const unsubscribe1 = ds.subscribe('onStart', (data) => getDebounce(data));
+unsubscribeStop();
 
 
-const unsubscribe = ds.subscribe('onFinish', (data) => {
-  console.log('data - 2', data);
-});
+dataStore.publish("start", {value: 1});
+dataStore.publish("stop", {value: 0})
 
-ds.publish('onStart', { on: true, off: false });
-ds.publish('onFinish', { off: true, on: false });
 ```

@@ -13,6 +13,8 @@ export class PubSub<TChanelPayload extends { [k: string]: unknown }> {
 
   constructor() {}
 
+
+  // Subscribe 
   public subscribe<TChanel extends keyof TChanelPayload>(
     chanel: TChanel,
     cb: (data: TCallBack<TChanelPayload[TChanel]>) => void
@@ -39,10 +41,9 @@ export class PubSub<TChanelPayload extends { [k: string]: unknown }> {
     };
   }
 
-  public publish<TChanel extends keyof TChanelPayload>(
-    chanelName: TChanel,
-    data: TChanelPayload[TChanel]
-  ) {
+
+   // Publish
+  public publish<TChanel extends keyof TChanelPayload>(chanelName: TChanel, data: TChanelPayload[TChanel]) {
     const channel = String(chanelName);
 
     if (!this.subscribers[channel]) {
@@ -54,10 +55,10 @@ export class PubSub<TChanelPayload extends { [k: string]: unknown }> {
     });
   }
 
+  //Get subscribers count
   public getSubscriberCounts(chanelName: string) {
     const channel = String(chanelName);
 
     return Object.keys(this.subscribers[channel] || {}).length;
   }
 }
-
